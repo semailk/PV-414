@@ -16,7 +16,6 @@ class UserTest extends TestCase
     {
         $factoryUser = User::factory()->create();
         $admin = User::factory()->create(['role' => 'admin']);
-
         $user = User::query()
             ->where('id', $factoryUser->id)
             ->where('email', $factoryUser->email)
