@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Application;
+use App\Models\ContactType;
 use Illuminate\Support\Str;
 
 return [
@@ -131,6 +133,11 @@ return [
     |
     */
 
-    'serializable_classes' => false,
-
+    'serializable_classes' => [
+        App\Models\User::class,
+        Application::class,
+        ContactType::class,
+        Illuminate\Database\Eloquent\Collection::class,
+        Illuminate\Database\Eloquent\Model::class,
+    ],
 ];

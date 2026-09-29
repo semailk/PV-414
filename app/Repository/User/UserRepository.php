@@ -6,6 +6,7 @@ use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
@@ -31,6 +32,8 @@ class UserRepository implements UserRepositoryInterface
             $user->avatar = last(explode('/', $userStoreRequest->file('avatar')->store('avatars', 'public')));
             $user->save();
         }
+
+        Cache::put('user_' . $user->id, $user, 14400);
         return $user;
     }
 

@@ -11,6 +11,7 @@ use App\Repository\User\UserRepository;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -42,10 +43,14 @@ class UserController extends Controller
             ->with('success', 'User created successfully.');
     }
 
-    public function edit(User $user): View
+    public function edit(int $userId): View
     {
+        $user = Cache::remember('user_' . $userId, 3600, function () use ($userId) {
+            return User::findOrFail($userId)->load(['applications', 'contactTypes']);
+        });
+
         return view('users.edit', [
-            'user' => $user->load(['applications', 'contactTypes']),
+            'user' => $user,
             'contactTypes' => ContactType::all()
         ]);
     }
