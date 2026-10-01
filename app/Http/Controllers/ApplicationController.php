@@ -2,63 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Application\ApplicationStoreRequest;
+use App\Http\Requests\Application\ApplicationUpdateRequest;
+use App\Models\Application;
+use App\Models\Department;
+use App\Models\User;
+use App\Repository\Application\ApplicationRepository;
+use App\Services\ApplicationService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 class ApplicationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct(
+        private ApplicationRepository $applicationRepository,
+        private ApplicationService $applicationService
+    ) {}
+
+    public function index(Request $request): View
     {
-        //
+        return view('applications.index', $this->applicationService->getApplicationList($request));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('applications.create', [
+            'departments' => Department::orderBy('title')->get(),
+            'users' => User::query()->orderBy('name')->get(['id', 'name']),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ApplicationStoreRequest $applicationStoreRequest): RedirectResponse
     {
-        //
+        return redirect()
+            ->route('applications.show', $this->applicationRepository->store($applicationStoreRequest))
+            ->with('success', 'Заявка успешно создана.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Application $application): View
     {
-        dd($id);
+        Gate::authorize('view', $application);
+        return view('applications.show', [
+            'application' => $application->load(['user', 'department']),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Application $application): View
     {
-        //
+        Gate::authorize('view', $application);
+
+        return view('applications.edit', [
+            'application' => $application,
+            'departments' => Department::orderBy('title')->get(),
+            'users' => User::query()->orderBy('name')->get(['id', 'name']),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(ApplicationUpdateRequest $applicationUpdateRequest, Application $application): RedirectResponse
     {
-        //
+        Gate::authorize('update', $application);
+        $this->applicationRepository->update($applicationUpdateRequest, $application);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Заявка успешно обновлена.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Application $application): RedirectResponse
     {
-        //
+        Gate::authorize('delete', $application);
+        $this->applicationRepository->destroy($application);
+
+        return redirect()
+            ->route('applications.index')
+            ->with('success', 'Заявка успешно удалена.');
     }
 }

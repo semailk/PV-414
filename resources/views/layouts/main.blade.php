@@ -264,6 +264,10 @@
 
                             @if(auth()->user()->isAdmin())
                                 <div class="py-2">
+                                    <a href="{{ route('applications.index') }}" class="flex items-center px-4 py-3 hover:bg-indigo-50 transition-colors group">
+                                        <i class="fas fa-inbox w-6 text-indigo-500 group-hover:text-indigo-700"></i>
+                                        <span class="text-sm text-gray-700 group-hover:text-indigo-700">Заявки</span>
+                                    </a>
                                     <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 hover:bg-indigo-50 transition-colors group">
                                         <i class="fas fa-user w-6 text-indigo-500 group-hover:text-indigo-700"></i>
                                         <span class="text-sm text-gray-700 group-hover:text-indigo-700">Пользователи</span>
@@ -276,6 +280,12 @@
                                     <i class="fas fa-user w-6 text-indigo-500 group-hover:text-indigo-700"></i>
                                     <span class="text-sm text-gray-700 group-hover:text-indigo-700">Мой профиль</span>
                                 </a>
+                                @if(auth()->user()?->isUser())
+                                    <a href="{{ route('applications.index') }}" class="flex items-center px-4 py-3 hover:bg-indigo-50 transition-colors group">
+                                        <i class="fas fa-file-alt w-6 text-indigo-500 group-hover:text-indigo-700"></i>
+                                        <span class="text-sm text-gray-700 group-hover:text-indigo-700">Мои заявки</span>
+                                    </a>
+                                @endif
                                 <a href="#" class="flex items-center px-4 py-3 hover:bg-indigo-50 transition-colors group">
                                     <i class="fas fa-cog w-6 text-indigo-500 group-hover:text-indigo-700"></i>
                                     <span class="text-sm text-gray-700 group-hover:text-indigo-700">Настройки</span>
@@ -314,10 +324,9 @@
                     <i class="fas fa-th-large w-6 text-indigo-500"></i>
                     <span class="text-sm text-gray-700">Дашборд</span>
                 </a>
-                <a href="#" class="flex items-center px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors">
+                <a href="{{ route('applications.index') }}" class="flex items-center px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors">
                     <i class="fas fa-inbox w-6 text-indigo-500"></i>
                     <span class="text-sm text-gray-700">Заявки</span>
-                    <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">12</span>
                 </a>
                 <a href="#" class="flex items-center px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors">
                     <i class="fas fa-users w-6 text-indigo-500"></i>
@@ -378,7 +387,7 @@
                         <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-300 mb-4">Навигация</h3>
                         <ul class="space-y-2.5">
                             <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Главная</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Заявки</a></li>
+                            <li><a href="{{ route('applications.index') }}" class="text-gray-300 hover:text-white transition-colors text-sm">Заявки</a></li>
                             <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Контакты</a></li>
                             <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Сделки</a></li>
                             <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Отчеты</a></li>

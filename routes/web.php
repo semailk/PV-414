@@ -8,13 +8,12 @@ Route::get('/', function () {
     return view('dashboard');
 });
 Route::middleware('auth.admin')->resource('users', UserController::class)->except(['show']);
-Route::resource('applications', ApplicationController::class);
+Route::resource('applications', ApplicationController::class)->middleware('auth');
 
-//Route::get('/users', [UserController::class, 'index'])->name('users.index');
+// Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
 Route::prefix('auth')->group(function () {
     Auth::routes([
         'verify' => true,
     ]);
 });
-
